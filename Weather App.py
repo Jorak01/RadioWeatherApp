@@ -6,6 +6,7 @@ BAOFENG_PORT = 'COM8'  # Replace with your serial port
 BAOFENG_BAUDRATE = 9600
 WEATHER_API_KEY = '4e4cccd3d1044fcca6441813240308'
 WEATHER_API_URL = 'https://api.weather.com/v3/wx/conditions/current?apiKey={}&geocode={}&format=json'
+Frequency = 162.400
 
 
 def fetch_baofeng_data():
@@ -18,7 +19,9 @@ def fetch_baofeng_data():
 def fetch_weather_data():
     latitude = '30.4927'  # Cedar Park latitude
     longitude = '-97.6740'  # Cedar Park longitude
-    url = WEATHER_API_URL.format(WEATHER_API_KEY, f'{latitude},{longitude}')
+    api_key = ''
+
+    url = 'https://api.tomorrow.io/v4/weather/forecast?location={latitude},{longitude}&apikey={api_key}'
 
     response = requests.get(url)
     if response.status_code == 200:
@@ -31,12 +34,17 @@ def main():
     baofeng_data = fetch_baofeng_data()
     weather_data = fetch_weather_data()
 
-    if weather_data:
+    if weather_data & baofeng_data:
         print("Weather Data:")
         print(weather_data)
+        print("Baofeng Data:")
+        print(baofeng_data)
     elif baofeng_data:
         print("Baofeng Data:")
         print(baofeng_data)
+    elif weather_data:
+        print("weather_data:")
+        print(weather_data)
     else:
         print("Failed to retrieve weather or Baofeng data.")
 
